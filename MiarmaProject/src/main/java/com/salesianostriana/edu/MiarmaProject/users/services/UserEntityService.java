@@ -39,7 +39,7 @@ public class UserEntityService extends BaseService<UserEntity, UUID, UserEntityR
                     .email(userDto.getEmail())
                     .fechaNacimiento(userDto.getFechaNacimiento())
                     .fotoPerfil(userDto.getAvatar())
-                    .password(userDto.getPassword())
+                    .password(passwordEncoder.encode(userDto.getPassword()))
                     .telefono(userDto.getTelefono())
                     .perfil(userDto.getPerfil())
                     .build();
