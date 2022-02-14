@@ -1,5 +1,6 @@
 package com.salesianostriana.edu.MiarmaProject.model;
 
+import com.salesianostriana.edu.MiarmaProject.users.model.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,4 +27,7 @@ public class Post {
     private String ContenidoMultimedia;
 
     private PostType tipoPublicacion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private UserEntity user;
 }

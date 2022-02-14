@@ -5,8 +5,9 @@ import com.salesianostriana.edu.MiarmaProject.model.PostType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post,Long> {
 
-    List<Post> findAllByTipoPublicacion(PostType postType);
+    List<Post> findByTipoPublicacion(PostType postType);
 }

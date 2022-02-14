@@ -1,5 +1,6 @@
 package com.salesianostriana.edu.MiarmaProject.users.model;
 
+import com.salesianostriana.edu.MiarmaProject.model.Post;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -23,6 +25,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@NamedEntityGraph(
+        name = "UsuarioConPosts",attributeNodes = {
+                @NamedAttributeNode("posts"),
+}
+)
 public class UserEntity implements UserDetails {
 
     @Id
@@ -51,6 +58,9 @@ public class UserEntity implements UserDetails {
     private String telefono;
 
     private UserProfile perfil;
+
+    @OneToMany(mappedBy = "user")
+    private List<Post> posts = new ArrayList<>();
 
 
 

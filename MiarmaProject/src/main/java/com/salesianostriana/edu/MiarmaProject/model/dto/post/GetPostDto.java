@@ -1,5 +1,7 @@
 package com.salesianostriana.edu.MiarmaProject.model.dto.post;
 
+import com.salesianostriana.edu.MiarmaProject.users.dto.GetUserDto;
+import com.salesianostriana.edu.MiarmaProject.users.model.UserEntity;
 import lombok.*;
 
 import java.util.UUID;
@@ -14,4 +16,5 @@ public class GetPostDto {
     private String contenido;
     private String contenidoMultimedia;
     private String tipoPublicacion;
+    private GetUserDto user;
 }
