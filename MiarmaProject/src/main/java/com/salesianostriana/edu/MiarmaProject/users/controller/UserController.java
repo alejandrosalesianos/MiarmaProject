@@ -8,10 +8,10 @@ import com.salesianostriana.edu.MiarmaProject.users.services.UserEntityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,9 +22,9 @@ public class UserController {
     private final UserDtoConverter dtoConverter;
 
     @PostMapping("/")
-    public ResponseEntity<GetUserDto> nuevoUser(@RequestBody CreateUserDto userDto){
-        UserEntity user = userEntityService.saveUser(userDto);
-        GetUserDto getUserDto = dtoConverter.UserEntityToGetUserDto(user);
+    public ResponseEntity<?> nuevoUser(@RequestPart("user") CreateUserDto userDto, @RequestPart("file")MultipartFile file) throws IOException {
+        UserEntity user = userEntityService.saveUser(userDto,file);
+        GetUserDto getUserDto = dtoConverter.UserEntityToGetUserDto(user,file);
         return ResponseEntity.status(HttpStatus.CREATED).body(getUserDto);
     }
 }
