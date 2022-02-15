@@ -61,7 +61,8 @@ public class UserEntity implements UserDetails {
 
     private UserProfile perfil;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
+    @Builder.Default
     private List<Post> posts = new ArrayList<>();
 
     /*@OneToMany
@@ -105,4 +106,10 @@ public class UserEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
+
+
+
+
 }

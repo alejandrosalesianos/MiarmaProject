@@ -1,7 +1,10 @@
 package com.salesianostriana.edu.MiarmaProject.users.dto;
 
+import com.salesianostriana.edu.MiarmaProject.model.Post;
+import com.salesianostriana.edu.MiarmaProject.model.dto.post.GetPostDto;
 import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -16,5 +19,6 @@ public class GetUserDto {
     private String telefono;
     private String avatar;
     private String perfil;
+    private List<GetPostDto> posts;
 
 }

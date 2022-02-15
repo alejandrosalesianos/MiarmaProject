@@ -30,6 +30,12 @@ public class Post {
 
     private PostType tipoPublicacion;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private UserEntity user;
+
+    //Helpers
+
+    public void addToUser(UserEntity user){
+        user.getPosts().add(this);
+    }
 }

@@ -1,8 +1,10 @@
 package com.salesianostriana.edu.MiarmaProject.security;
 
+import com.salesianostriana.edu.MiarmaProject.model.dto.post.GetPostDto;
 import com.salesianostriana.edu.MiarmaProject.security.dto.LoginDto;
 import com.salesianostriana.edu.MiarmaProject.security.dto.UsuarioResponseJwt;
 import com.salesianostriana.edu.MiarmaProject.security.jwt.JwtProvider;
+import com.salesianostriana.edu.MiarmaProject.users.dto.UserDtoConverter;
 import com.salesianostriana.edu.MiarmaProject.users.model.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,12 +19,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.stream.Collectors;
+
 @RestController
 @RequiredArgsConstructor
 public class AutheticationController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
+    private final UserDtoConverter userDtoConverter;
 
     String jwt = "";
 
@@ -48,11 +53,23 @@ public class AutheticationController {
                 .email(user.getEmail())
                 .avatar(user.getFotoPerfil())
                 .perfil(user.getPerfil().name())
+                .posts(user.getPosts()
+                        .stream().map(
+                                p -> GetPostDto.builder()
+                                        .id(p.getId())
+                                        .titulo(p.getTitulo())
+                                        .contenidoOriginal(p.getContenidoOriginal())
+                                        .contenido(p.getContenido())
+                                        .tipoPublicacion(p.getTipoPublicacion().name())
+                                        .contenidoMultimedia(p.getContenidoMultimedia())
+                                        .user(user.getUsername())
+                                        .build())
+                        .collect(Collectors.toList()))
                 .token(jwt)
                 .build();
     }
     @GetMapping("/me")
-    public ResponseEntity<?> myProfile(@AuthenticationPrincipal UserEntity user){
-        return ResponseEntity.ok(userToUsuarioResponseJwt(user,jwt));
+    public ResponseEntity<?> myProfile(@AuthenticationPrincipal UserEntity user) throws Exception {
+        return ResponseEntity.ok(userDtoConverter.UserEntityToGetUserDto(user));
     }
 }

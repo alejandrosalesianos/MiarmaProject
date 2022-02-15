@@ -1,5 +1,6 @@
 package com.salesianostriana.edu.MiarmaProject.model.dto.post;
 
+import com.salesianostriana.edu.MiarmaProject.model.PostType;
 import com.salesianostriana.edu.MiarmaProject.users.dto.GetUserDto;
 import com.salesianostriana.edu.MiarmaProject.users.model.UserEntity;
 import lombok.*;
@@ -18,4 +19,13 @@ public class GetPostDto {
     private String contenidoMultimedia;
     private String tipoPublicacion;
     private String user;
+
+    public GetPostDto(Long id, String titulo, String contenido, String contenidoOriginal, String contenidoMultimedia, String tipoPublicacion) {
+        this.id = id;
+        this.titulo = titulo;
+        this.contenido = contenido;
+        this.contenidoOriginal = contenidoOriginal;
+        this.contenidoMultimedia = contenidoMultimedia;
+        this.tipoPublicacion = tipoPublicacion;
+    }
 }

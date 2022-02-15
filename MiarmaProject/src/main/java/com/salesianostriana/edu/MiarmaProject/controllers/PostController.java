@@ -36,6 +36,7 @@ public class PostController {
     public ResponseEntity<GetPostDto> createPost(@RequestPart("post")CreatePostDto createPostDto, @RequestPart("file")MultipartFile file, @AuthenticationPrincipal UserEntity user) throws IOException {
 
     Post post = postService.save(postDtoConverter.createPostDtoToPost(createPostDto, file),file,user);
+    post.addToUser(user);
     GetPostDto getPostDto = postDtoConverter.postToGetPostDtoWithUser(post,user);
     return ResponseEntity.created(URI.create(post.getContenidoMultimedia())).body(getPostDto);
     }

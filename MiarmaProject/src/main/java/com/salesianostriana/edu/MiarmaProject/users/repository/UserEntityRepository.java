@@ -1,7 +1,9 @@
 package com.salesianostriana.edu.MiarmaProject.users.repository;
 
+import com.salesianostriana.edu.MiarmaProject.model.Post;
 import com.salesianostriana.edu.MiarmaProject.users.model.UserEntity;
 import com.salesianostriana.edu.MiarmaProject.users.model.UserProfile;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -15,4 +17,5 @@ public interface UserEntityRepository extends JpaRepository<UserEntity, UUID>{
     Optional<List<UserEntity>> findByPerfil(UserProfile userProfile);
 
     Optional<UserEntity> findById(UUID id);
+
 }
