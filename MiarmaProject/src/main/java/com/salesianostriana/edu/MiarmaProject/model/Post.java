@@ -24,7 +24,9 @@ public class Post {
 
     private String contenido;
 
-    private String ContenidoMultimedia;
+    private String contenidoOriginal;
+
+    private String contenidoMultimedia;
 
     private PostType tipoPublicacion;
 

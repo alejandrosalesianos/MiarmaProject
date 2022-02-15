@@ -14,6 +14,7 @@ public class GetPostDto {
     private Long id;
     private String titulo;
     private String contenido;
+    private String contenidoOriginal;
     private String contenidoMultimedia;
     private String tipoPublicacion;
     private String user;

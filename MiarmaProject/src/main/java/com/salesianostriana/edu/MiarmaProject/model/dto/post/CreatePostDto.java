@@ -11,6 +11,5 @@ public class CreatePostDto {
     private String titulo;
     private String contenido;
     private PostType tipoPublicacion;
-    private Long idUsuario;
 
 }
