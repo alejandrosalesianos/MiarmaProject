@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,9 +23,9 @@ public class UserController {
     private final UserDtoConverter dtoConverter;
 
     @PostMapping("/")
-    public ResponseEntity<?> nuevoUser(@RequestPart("user") CreateUserDto userDto, @RequestPart("file")MultipartFile file) throws IOException {
+    public ResponseEntity<?> nuevoUser(@RequestPart("user") CreateUserDto userDto, @RequestPart("file")MultipartFile file) throws Exception {
         UserEntity user = userEntityService.saveUser(userDto,file);
-        GetUserDto getUserDto = dtoConverter.UserEntityToGetUserDto(user,file);
-        return ResponseEntity.status(HttpStatus.CREATED).body(getUserDto);
+        GetUserDto getUserDto = dtoConverter.UserEntityToGetUserDto(user);
+        return ResponseEntity.created(URI.create(user.getFotoPerfil())).body(getUserDto);
     }
 }

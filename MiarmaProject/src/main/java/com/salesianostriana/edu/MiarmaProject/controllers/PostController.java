@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,16 +40,14 @@ public class PostController {
     public ResponseEntity<GetPostDto> createPost(@RequestPart("post")CreatePostDto createPostDto, @RequestPart("file")MultipartFile file, @AuthenticationPrincipal UserEntity user) throws IOException {
 
     Post post = postService.save(postDtoConverter.createPostDtoToPost(createPostDto, file),file,user);
-    GetUserDto getUserDto = userDtoConverter.UserEntityToGetUserDto(user,file);
-    GetPostDto getPostDto = postDtoConverter.postToGetPostDto(post,getUserDto);
-    return ResponseEntity.status(HttpStatus.CREATED).body(getPostDto);
+    GetPostDto getPostDto = postDtoConverter.postToGetPostDtoWithUser(post,user);
+    return ResponseEntity.created(URI.create(post.getContenidoMultimedia())).body(getPostDto);
     }
     @PutMapping("/{id}")
     public ResponseEntity<GetPostDto> editPost(@PathVariable Long id, @RequestPart("file") MultipartFile file,@RequestPart("post")Post post,@AuthenticationPrincipal UserEntity user) throws IOException {
 
-        Post actualPost = postService.edit(id,post,file);
-        GetUserDto getUserDto = userDtoConverter.UserEntityToGetUserDto(user,file);
-        GetPostDto postDto = postDtoConverter.postToGetPostDto(actualPost,getUserDto);
+        Post actualPost = postService.edit(id,post,file,user);
+        GetPostDto postDto = postDtoConverter.postToGetPostDtoWithUser(actualPost,user);
         return ResponseEntity.ok().body(postDto);
     }
     @DeleteMapping("/{id}")
@@ -63,16 +62,12 @@ public class PostController {
         }
     }
     @GetMapping("/public")
-    public ResponseEntity<List<Post>> ListAllPublic() throws ListNotFoundException {
-        return ResponseEntity.ok().body(postRepository.findByTipoPublicacion(PostType.PUBLICA));
-        /*List<Post> posts = postService.findAllByTipo();
-        if (posts.isEmpty()){
-            return ResponseEntity.notFound().build();
-        }
-        else {
-            List<GetPostDto> listaDto = posts.stream().map(postDtoConverter::postToGetPostDto).collect(Collectors.toList());
-            return ResponseEntity.ok().body(postRepository.findByTipoPublicacion(PostType.PUBLICA));
-        }*/
+    public ResponseEntity<List<GetPostDto>> ListAllPublic() throws ListNotFoundException {
+        return ResponseEntity.ok().body(postService.PostListToGetPostDtoList());
+    }
+    @GetMapping("/{nick}")
+    public ResponseEntity<List<GetPostDto>> ListAllPostsByNick(@PathVariable String nick){
+        return ResponseEntity.ok().body(postService.PostListToGetPostDtoListUsers(nick));
     }
 
 

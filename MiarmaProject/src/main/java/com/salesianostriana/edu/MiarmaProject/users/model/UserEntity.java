@@ -28,11 +28,13 @@ import java.util.UUID;
 @NamedEntityGraph(
         name = "UsuarioConPosts",attributeNodes = {
                 @NamedAttributeNode("posts"),
+                //@NamedAttributeNode("seguidores")
 }
 )
 public class UserEntity implements UserDetails {
 
     @Id
+    @Column(name = "ID")
     @GeneratedValue
     @GenericGenerator(
             name = "UUID",
@@ -61,6 +63,10 @@ public class UserEntity implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     private List<Post> posts = new ArrayList<>();
+
+    /*@OneToMany
+    @JoinColumn(name = "Usuario-Seguidor",referencedColumnName = "ID")
+    private List<UserEntity> seguidores = new ArrayList<>();*/
 
 
 

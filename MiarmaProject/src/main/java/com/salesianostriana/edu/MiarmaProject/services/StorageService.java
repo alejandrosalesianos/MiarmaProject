@@ -4,6 +4,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 
+import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -24,4 +25,6 @@ public interface StorageService {
     void deleteFile(String filename);
 
     void deleteAll();
+
+    BufferedImage simpleResizer(BufferedImage bufferedImage,int width);
 }

@@ -19,24 +19,33 @@ public class PostDtoConverter {
     private final StorageService storageService;
 
 
-    public GetPostDto postToGetPostDto(Post post, GetUserDto getUserDto) throws IOException {
+    public GetPostDto postToGetPostDto(Post post) {
         return GetPostDto.builder()
                 .id(post.getId())
                 .contenido(post.getContenido())
                 .contenidoMultimedia(post.getContenidoMultimedia())
                 .tipoPublicacion(post.getTipoPublicacion().name())
                 .titulo(post.getTitulo())
-                .user(getUserDto)
+                .user(post.getUser().getUsername())
+                .build();
+    }
+    public GetPostDto postToGetPostDtoWithUser(Post post,UserEntity user) {
+        return GetPostDto.builder()
+                .id(post.getId())
+                .contenido(post.getContenido())
+                .contenidoMultimedia(post.getContenidoMultimedia())
+                .tipoPublicacion(post.getTipoPublicacion().name())
+                .titulo(post.getTitulo())
+                .user(user.getUsername())
                 .build();
     }
     public Post createPostDtoToPost(CreatePostDto createPostDto, MultipartFile file) throws IOException {
 
-        String filename = storageService.store(file);
-
         String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/download/")
-                .path(filename)
+                .path(file.getOriginalFilename())
                 .toUriString();
+
         return Post.builder()
                 .titulo(createPostDto.getTitulo())
                 .contenido(createPostDto.getContenido())

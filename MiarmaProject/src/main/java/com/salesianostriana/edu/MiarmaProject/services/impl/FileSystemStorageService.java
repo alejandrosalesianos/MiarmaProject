@@ -49,42 +49,42 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public String store(MultipartFile file) throws IOException {
-
+    public String store(MultipartFile file) {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
-
-        String extension = StringUtils.getFilenameExtension(filename);
-        String name = filename.replace("."+extension,"");
-
-        BufferedImage img = ImageIO.read(file.getInputStream());
-
-        BufferedImage escaleImg = imageResizer(img,128);
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(escaleImg,extension,baos);
-
-        MultipartFile newImage = new MockMultipartFile(name,baos.toByteArray());
-
+        String newFilename = "";
         try {
-            //comprobar si el fichero esta vacio
-            if (newImage.isEmpty())
-                throw new StorageException("El fichero subido esta vacio");
+            // Si el fichero está vacío, excepción al canto
+            if (file.isEmpty())
+                throw new StorageException("El fichero subido está vacío");
 
-            while (Files.exists(rootLocation.resolve(filename))){
-                    String suffix = Long.toString(System.currentTimeMillis());
-                    suffix = suffix.substring(suffix.length()-6);
+            newFilename = filename;
+            while(Files.exists(rootLocation.resolve(newFilename))) {
+                // Tratamos de generar uno nuevo
+                String extension = StringUtils.getFilenameExtension(newFilename);
+                String name = newFilename.replace("."+extension,"");
 
-                    filename = name + "_" + suffix + "." +extension;
-                }
-            try(InputStream inputStream = newImage.getInputStream()){
-                Files.copy(inputStream,rootLocation.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
+                String suffix = Long.toString(System.currentTimeMillis());
+                suffix = suffix.substring(suffix.length()-6);
+
+                newFilename = name + "_" + suffix + "." + extension;
+
             }
-        } catch (IOException ex){
-            throw new StorageException("Error en el almacenamiento del fichero "+ filename,ex);
+
+            try (InputStream inputStream = file.getInputStream()) {
+                Files.copy(inputStream, rootLocation.resolve(newFilename),
+                        StandardCopyOption.REPLACE_EXISTING);
+            }
+
+
+
+        } catch (IOException ex) {
+            throw new StorageException("Error en el almacenamiento del fichero: " + newFilename, ex);
         }
 
-        return filename;
+        return newFilename;
+
     }
+
 
     @Override
     public Stream<Path> loadAll() {
@@ -134,4 +134,10 @@ public class FileSystemStorageService implements StorageService {
     public void deleteAll() {
         FileSystemUtils.deleteRecursively(rootLocation.toFile());
     }
+
+    @Override
+    public BufferedImage simpleResizer(BufferedImage bufferedImage, int width) {
+        return Scalr.resize(bufferedImage,width);
+    }
+
 }
