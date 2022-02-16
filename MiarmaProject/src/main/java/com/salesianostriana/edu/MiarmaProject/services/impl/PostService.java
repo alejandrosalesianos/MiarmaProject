@@ -1,5 +1,6 @@
 package com.salesianostriana.edu.MiarmaProject.services.impl;
 
+import com.salesianostriana.edu.MiarmaProject.exception.ListNotFoundException;
 import com.salesianostriana.edu.MiarmaProject.model.Post;
 import com.salesianostriana.edu.MiarmaProject.model.PostType;
 import com.salesianostriana.edu.MiarmaProject.model.dto.post.GetPostDto;
@@ -54,6 +55,7 @@ public class PostService extends BaseService<Post,Long, PostRepository> {
                 .path("/download/")
                 .path(filenameOriginal)
                 .toUriString();
+
         return repository.save(Post.builder()
                 .contenido(post.getContenido())
                 .contenidoMultimedia(uriEscaled)
@@ -63,43 +65,53 @@ public class PostService extends BaseService<Post,Long, PostRepository> {
                 .user(user)
                 .build());
     }
-    public Post edit(Long id,Post post,MultipartFile file,UserEntity user) throws IOException {
+    public Post edit(Long id,Post post,MultipartFile file,UserEntity user) throws IOException, ListNotFoundException {
 
-            String filenameOriginal = storageService.store(file);
-            String filename = storageService.store(file);
+            Optional<Post> post1 = findById(id);
+            if (!post1.isPresent()){
+                throw new ListNotFoundException("No se encontro el post");
+            }else {
+                storageService.deleteFile(post1.get().getContenidoOriginal());
+                storageService.deleteFile(post1.get().getContenidoMultimedia());
 
-            String extension = StringUtils.getFilenameExtension(filename);
+                String filenameOriginal = storageService.store(file);
+                String filename = storageService.store(file);
 
-            BufferedImage originalImage = ImageIO.read(file.getInputStream());
+                String extension = StringUtils.getFilenameExtension(filename);
 
-            BufferedImage escaledImage = storageService.simpleResizer(originalImage,1024);
+                BufferedImage originalImage = ImageIO.read(file.getInputStream());
 
-            OutputStream outputStream = Files.newOutputStream(storageService.load(filename));
+                BufferedImage escaledImage = storageService.simpleResizer(originalImage,1024);
 
-            ImageIO.write(escaledImage,extension,outputStream);
+                OutputStream outputStream = Files.newOutputStream(storageService.load(filename));
 
-            String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path("/download/")
-                    .path(filename)
-                    .toUriString();
-            String uri2 = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path("/download/")
-                    .path(filenameOriginal)
-                    .toUriString();
+                ImageIO.write(escaledImage,extension,outputStream);
+
+                String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                        .path("/download/")
+                        .path(filename)
+                        .toUriString();
+                String uri2 = ServletUriComponentsBuilder.fromCurrentContextPath()
+                        .path("/download/")
+                        .path(filenameOriginal)
+                        .toUriString();
 
 
-            return repository.findById(id).map(newPost ->
-                    save(newPost.builder()
-                            .id(id)
-                            .titulo(post.getTitulo())
-                            .tipoPublicacion(post.getTipoPublicacion())
-                            .contenido(post.getContenido())
-                            .contenidoMultimedia(uri)
-                            .contenidoOriginal(uri2)
-                            .user(user)
-                            .build())).get();
+                return repository.findById(id).map(newPost ->
+                        save(newPost.builder()
+                                .id(id)
+                                .titulo(post.getTitulo())
+                                .tipoPublicacion(post.getTipoPublicacion())
+                                .contenido(post.getContenido())
+                                .contenidoMultimedia(uri)
+                                .contenidoOriginal(uri2)
+                                .user(user)
+                                .build())).get();
 
+            }
     }
+
+
 
     public List<GetPostDto> PostListToGetPostDtoList(){
         List<Post> posts = repository.findAll();
@@ -117,6 +129,15 @@ public class PostService extends BaseService<Post,Long, PostRepository> {
             return Collections.EMPTY_LIST;
         }else {
             return postsUsers.stream().map(postDtoConverter::postToGetPostDto).collect(Collectors.toList());
+        }
+    }
+    public List<GetPostDto> PostListEntityGraph(UserEntity user){
+        List<Post> posts = repository.findAll();
+        List<Post> postList = repository.findByUserId(user.getId());
+        if (posts.isEmpty() && postList.isEmpty()){
+            return Collections.EMPTY_LIST;
+        }else {
+            return postList.stream().map(postDtoConverter::postToGetPostDto).collect(Collectors.toList());
         }
     }
 }

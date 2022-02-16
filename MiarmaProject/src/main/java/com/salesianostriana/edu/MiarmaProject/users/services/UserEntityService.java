@@ -1,5 +1,6 @@
 package com.salesianostriana.edu.MiarmaProject.users.services;
 
+import com.salesianostriana.edu.MiarmaProject.exception.ListNotFoundException;
 import com.salesianostriana.edu.MiarmaProject.services.StorageService;
 import com.salesianostriana.edu.MiarmaProject.services.base.BaseService;
 import com.salesianostriana.edu.MiarmaProject.users.dto.CreateUserDto;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service("userDetailService")
@@ -35,11 +37,8 @@ public class UserEntityService extends BaseService<UserEntity, UUID, UserEntityR
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return this.repository.findFirstByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email + " No encontrado"));
     }
-    public List<UserEntity> loadUserByProfile(UserProfile userProfile) throws UsernameNotFoundException{
-        return this.repository.findByPerfil(userProfile).orElseThrow(() -> new UsernameNotFoundException(userProfile+" No encontrado"));
-    }
-    public UserEntity loadUserById(UUID id) throws UsernameNotFoundException{
-        return this.repository.findById(id).orElseThrow(() -> new UsernameNotFoundException(id+" No encontrado"));
+    public UserEntity findByUsername(String username){
+        return this.repository.findByNombreUsuario(username).orElseThrow(() -> new UsernameNotFoundException(username +"No encontrado"));
     }
 
     public UserEntity saveUser(CreateUserDto userDto, MultipartFile file) throws IOException {
@@ -75,6 +74,52 @@ public class UserEntityService extends BaseService<UserEntity, UUID, UserEntityR
                     .build();
             return repository.save(userEntity);
         } else {
+            return null;
+        }
+    }
+    public UserEntity edit(CreateUserDto createUserDto,MultipartFile file,UserEntity userEntity) throws IOException, ListNotFoundException {
+
+        if (createUserDto.getPassword().equals(createUserDto.getPassword2())) {
+
+            Optional<UserEntity> user = findById(userEntity.getId());
+            if (!user.isPresent()) {
+                throw new ListNotFoundException("No se encontro el usuario");
+            } else {
+
+                storageService.deleteFile(user.get().getFotoPerfil());
+
+                String filename = storageService.store(file);
+
+                String extension = StringUtils.getFilenameExtension(filename);
+
+                BufferedImage originalImage = ImageIO.read(file.getInputStream());
+
+                BufferedImage escaledImage = storageService.simpleResizer(originalImage,128);
+
+                OutputStream outputStream = Files.newOutputStream(storageService.load(filename));
+
+                ImageIO.write(escaledImage,extension,outputStream);
+
+
+                String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                        .path("/download/")
+                        .path(filename)
+                        .toUriString();
+
+                return findById(user.get().getId()).map(newUser -> save(newUser.builder()
+                        .id(userEntity.getId())
+                        .nombreUsuario(createUserDto.getNick())
+                        .email(createUserDto.getEmail())
+                        .fechaNacimiento(createUserDto.getFechaNacimiento())
+                        .fotoPerfil(uri)
+                        .password(passwordEncoder.encode(createUserDto.getPassword()))
+                        .telefono(createUserDto.getTelefono())
+                        .perfil(createUserDto.getPerfil())
+                        .posts(userEntity.getPosts())
+                        .build())).get();
+            }
+
+        }else {
             return null;
         }
     }

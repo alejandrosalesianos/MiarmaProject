@@ -25,12 +25,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@NamedEntityGraph(
-        name = "UsuarioConPosts",attributeNodes = {
+/*@NamedEntityGraph(
+        name = "Usuario-Posts",attributeNodes = {
                 @NamedAttributeNode("posts"),
-                //@NamedAttributeNode("seguidores")
+                @NamedAttributeNode("seguidores")
 }
-)
+)*/
 public class UserEntity implements UserDetails {
 
     @Id
@@ -61,11 +61,13 @@ public class UserEntity implements UserDetails {
 
     private UserProfile perfil;
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user")
     @Builder.Default
     private List<Post> posts = new ArrayList<>();
 
-    /*@OneToMany
+
+    /* ManyToMany unidireccional
+    @OneToMany
     @JoinColumn(name = "Usuario-Seguidor",referencedColumnName = "ID")
     private List<UserEntity> seguidores = new ArrayList<>();*/
 

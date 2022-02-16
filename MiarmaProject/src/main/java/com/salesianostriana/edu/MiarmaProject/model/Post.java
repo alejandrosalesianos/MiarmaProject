@@ -14,10 +14,15 @@ import javax.persistence.*;
 @AllArgsConstructor @NoArgsConstructor
 @Builder
 @EntityListeners(AuditingEntityListener.class)
+@NamedEntityGraph(
+        name = "Post-Usuarios",attributeNodes = {
+        @NamedAttributeNode("user"),
+}
+)
 public class Post {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String titulo;
@@ -30,7 +35,8 @@ public class Post {
 
     private PostType tipoPublicacion;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn( foreignKey = @ForeignKey(name = "FK_POST_USER"))
     private UserEntity user;
 
     //Helpers

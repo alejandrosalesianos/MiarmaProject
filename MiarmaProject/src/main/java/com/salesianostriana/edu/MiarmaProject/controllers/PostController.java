@@ -36,12 +36,11 @@ public class PostController {
     public ResponseEntity<GetPostDto> createPost(@RequestPart("post")CreatePostDto createPostDto, @RequestPart("file")MultipartFile file, @AuthenticationPrincipal UserEntity user) throws IOException {
 
     Post post = postService.save(postDtoConverter.createPostDtoToPost(createPostDto, file),file,user);
-    post.addToUser(user);
     GetPostDto getPostDto = postDtoConverter.postToGetPostDtoWithUser(post,user);
     return ResponseEntity.created(URI.create(post.getContenidoMultimedia())).body(getPostDto);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<GetPostDto> editPost(@PathVariable Long id, @RequestPart("file") MultipartFile file,@RequestPart("post")CreatePostDto post,@AuthenticationPrincipal UserEntity user) throws IOException {
+    public ResponseEntity<GetPostDto> editPost(@PathVariable Long id, @RequestPart("file") MultipartFile file,@RequestPart("post")CreatePostDto post,@AuthenticationPrincipal UserEntity user) throws IOException, ListNotFoundException {
 
         Post post2 = postDtoConverter.createPostDtoToPost(post,file);
         Post actualPost = postService.edit(id,post2,file,user);
@@ -59,16 +58,27 @@ public class PostController {
             return ResponseEntity.noContent().build();
         }
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<GetPostDto> findOnePost (@PathVariable Long id){
+        Optional<Post> post = postService.findById(id);
+        if (!post.isPresent()){
+            return ResponseEntity.notFound().build();
+        }else {
+            return ResponseEntity.ok().body(postDtoConverter.postToGetPostDto(post.get()));
+        }
+    }
+
+
     @GetMapping("/public")
-    public ResponseEntity<List<GetPostDto>> ListAllPublic() throws ListNotFoundException {
+    public ResponseEntity<List<GetPostDto>> listAllPublic() throws ListNotFoundException {
         return ResponseEntity.ok().body(postService.PostListToGetPostDtoList());
     }
-    @GetMapping("/{nick}")
-    public ResponseEntity<List<GetPostDto>> ListAllPostsByNick(@PathVariable String nick){
+    @GetMapping("/")
+    public ResponseEntity<List<GetPostDto>> listAllPostsByNick(@RequestParam(value = "nick") String nick){
         return ResponseEntity.ok().body(postService.PostListToGetPostDtoListUsers(nick));
     }
     @GetMapping("/me")
-    public ResponseEntity<List<GetPostDto>> ListAllMyPosts(@AuthenticationPrincipal UserEntity user){
+    public ResponseEntity<List<GetPostDto>> listAllMyPosts(@AuthenticationPrincipal UserEntity user){
         return ResponseEntity.ok().body(postService.PostListToGetPostDtoListUsers(user.getUsername()));
     }
 
