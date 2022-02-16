@@ -29,5 +29,10 @@ public class FollowController {
         PeticionFollow peticionFollow = followService.save(createFollowDto,userEmisor,user);
         return ResponseEntity.status(HttpStatus.CREATED).body(followDtoConverter.FollowToGetFollowDto(peticionFollow));
     }
+    @PostMapping("/accept/{id}")
+    public ResponseEntity<?> acceptFollow(@PathVariable Long id,@AuthenticationPrincipal UserEntity user){
+        followService.acceptPeticionFollow(id,user);
+        return ResponseEntity.ok().build();
+    }
 
 }

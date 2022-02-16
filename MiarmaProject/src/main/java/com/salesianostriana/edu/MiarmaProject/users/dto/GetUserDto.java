@@ -1,7 +1,9 @@
 package com.salesianostriana.edu.MiarmaProject.users.dto;
 
 import com.salesianostriana.edu.MiarmaProject.model.Post;
+import com.salesianostriana.edu.MiarmaProject.model.dto.follow.GetFollowDto;
 import com.salesianostriana.edu.MiarmaProject.model.dto.post.GetPostDto;
+import com.salesianostriana.edu.MiarmaProject.users.model.UserEntity;
 import lombok.*;
 
 import java.util.List;
@@ -20,5 +22,7 @@ public class GetUserDto {
     private String avatar;
     private String perfil;
     private List<GetPostDto> posts;
+    private List<GetFollowDto> listaPeticiones;
+    private List<UserEntity> followers;
 
 }

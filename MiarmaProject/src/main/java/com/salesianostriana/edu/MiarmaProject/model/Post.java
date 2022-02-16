@@ -38,10 +38,4 @@ public class Post {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn( foreignKey = @ForeignKey(name = "FK_POST_USER"))
     private UserEntity user;
-
-    //Helpers
-
-    public void addToUser(UserEntity user){
-        user.getPosts().add(this);
-    }
 }

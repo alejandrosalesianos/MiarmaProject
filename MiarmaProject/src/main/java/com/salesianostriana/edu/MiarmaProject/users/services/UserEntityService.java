@@ -4,6 +4,8 @@ import com.salesianostriana.edu.MiarmaProject.exception.ListNotFoundException;
 import com.salesianostriana.edu.MiarmaProject.services.StorageService;
 import com.salesianostriana.edu.MiarmaProject.services.base.BaseService;
 import com.salesianostriana.edu.MiarmaProject.users.dto.CreateUserDto;
+import com.salesianostriana.edu.MiarmaProject.users.dto.GetUserDto;
+import com.salesianostriana.edu.MiarmaProject.users.dto.UserDtoConverter;
 import com.salesianostriana.edu.MiarmaProject.users.model.UserEntity;
 import com.salesianostriana.edu.MiarmaProject.users.model.UserProfile;
 import com.salesianostriana.edu.MiarmaProject.users.repository.UserEntityRepository;
@@ -22,9 +24,11 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service("userDetailService")
 @RequiredArgsConstructor
@@ -32,6 +36,7 @@ public class UserEntityService extends BaseService<UserEntity, UUID, UserEntityR
 
     private final PasswordEncoder passwordEncoder;
     private final StorageService storageService;
+    private final UserDtoConverter userDtoConverter;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -123,4 +128,12 @@ public class UserEntityService extends BaseService<UserEntity, UUID, UserEntityR
             return null;
         }
     }
+    /*public List<GetUserDto> ListGetUserDto(){
+        List<UserEntity> users = repository.findAll();
+        if (users.isEmpty()){
+            return Collections.EMPTY_LIST;
+        }else {
+            return users.stream().map(userDtoConverter::UserEntityToGetUserDto).collect(Collectors.toList());
+        }
+    }*/
 }

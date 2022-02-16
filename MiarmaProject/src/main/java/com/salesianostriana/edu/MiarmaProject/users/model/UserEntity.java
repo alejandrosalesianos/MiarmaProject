@@ -1,5 +1,6 @@
 package com.salesianostriana.edu.MiarmaProject.users.model;
 
+import com.salesianostriana.edu.MiarmaProject.model.PeticionFollow;
 import com.salesianostriana.edu.MiarmaProject.model.Post;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,12 +26,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-/*@NamedEntityGraph(
-        name = "Usuario-Posts",attributeNodes = {
-                @NamedAttributeNode("posts"),
-                @NamedAttributeNode("seguidores")
-}
-)*/
 public class UserEntity implements UserDetails {
 
     @Id
@@ -65,12 +60,12 @@ public class UserEntity implements UserDetails {
     @Builder.Default
     private List<Post> posts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "emisor")
+    @Builder.Default
+    private List<PeticionFollow> peticiones = new ArrayList<>();
 
-    /* ManyToMany unidireccional
-    @OneToMany
-    @JoinColumn(name = "Usuario-Seguidor",referencedColumnName = "ID")
-    private List<UserEntity> seguidores = new ArrayList<>();*/
-
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<UserEntity> followers = new ArrayList<>();
 
 
     @Override

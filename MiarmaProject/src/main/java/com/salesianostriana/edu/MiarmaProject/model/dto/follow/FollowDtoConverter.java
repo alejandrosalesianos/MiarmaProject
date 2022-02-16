@@ -17,8 +17,8 @@ public class FollowDtoConverter {
     public GetFollowDto FollowToGetFollowDto(PeticionFollow follow){
         return GetFollowDto.builder()
                 .id(follow.getId())
-                .destinatario(follow.getDestinatario().getUsername())
-                .emisor(follow.getEmisor().getUsername())
+                .destinatario(follow.getEmisor().getUsername())
+                .emisor(follow.getDestinatario().getUsername())
                 .mensaje(follow.getMensaje())
                 .build();
     }

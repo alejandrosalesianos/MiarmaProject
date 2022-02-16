@@ -9,6 +9,11 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor @AllArgsConstructor
 @Getter @Setter
+@NamedEntityGraph(
+        name = "Peticiones-usuarios",attributeNodes = {
+        @NamedAttributeNode("emisor"),
+}
+)
 public class PeticionFollow {
 
     @Id
