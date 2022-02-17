@@ -7,6 +7,7 @@ import com.salesianostriana.edu.MiarmaProject.model.dto.follow.GetFollowDto;
 import com.salesianostriana.edu.MiarmaProject.repositories.FollowRepository;
 import com.salesianostriana.edu.MiarmaProject.services.base.BaseService;
 import com.salesianostriana.edu.MiarmaProject.users.model.UserEntity;
+import com.salesianostriana.edu.MiarmaProject.users.repository.UserEntityRepository;
 import com.salesianostriana.edu.MiarmaProject.users.services.UserEntityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,8 @@ import java.util.stream.Collectors;
 public class FollowService extends BaseService<PeticionFollow,Long, FollowRepository> {
 
     private final FollowDtoConverter followDtoConverter;
+    private final UserEntityService userEntityService;
+    private final UserEntityRepository userEntityRepository;
 
     public PeticionFollow save(CreateFollowDto dto,UserEntity userEmisor, UserEntity userDestinatario){
         return repository.save(PeticionFollow.builder()
@@ -40,16 +43,14 @@ public class FollowService extends BaseService<PeticionFollow,Long, FollowReposi
     public void acceptPeticionFollow(Long id, UserEntity user){
 
         Optional<PeticionFollow> peticionFollow = findById(id);
-        if (!peticionFollow.isPresent()){
-        }
-        else {
-            if (peticionFollow.get().getDestinatario().equals(user)){
-                user.getFollowers().add(peticionFollow.get().getEmisor());
-                deleteById(id);
-            }
-            else {
-            }
-        }
+        Optional<UserEntity> userr = userEntityRepository.findByNombreUsuario(user.getNombreUsuario());
+            userr.get().getFollowers().add(peticionFollow.get().getDestinatario());
+            userEntityService.save(user);
+            deleteById(id);
+
+
+    }
+    public void declinePeticionFollow(Long id,UserEntity user){
 
     }
 }

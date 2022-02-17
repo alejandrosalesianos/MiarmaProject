@@ -36,7 +36,6 @@ public class UserEntityService extends BaseService<UserEntity, UUID, UserEntityR
 
     private final PasswordEncoder passwordEncoder;
     private final StorageService storageService;
-    private final UserDtoConverter userDtoConverter;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -129,7 +128,7 @@ public class UserEntityService extends BaseService<UserEntity, UUID, UserEntityR
         }
     }
     /*public List<GetUserDto> ListGetUserDto(){
-        List<UserEntity> users = repository.findAll();
+        List<UserEntity> users = repository.findAllFollowers();
         if (users.isEmpty()){
             return Collections.EMPTY_LIST;
         }else {

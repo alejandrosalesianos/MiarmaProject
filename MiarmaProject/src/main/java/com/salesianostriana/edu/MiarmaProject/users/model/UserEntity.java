@@ -26,6 +26,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@NamedEntityGraph(
+        name = "Usuarios-Followers",attributeNodes = {
+        @NamedAttributeNode("followers"),
+}
+)
 public class UserEntity implements UserDetails {
 
     @Id
@@ -64,7 +69,7 @@ public class UserEntity implements UserDetails {
     @Builder.Default
     private List<PeticionFollow> peticiones = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     private List<UserEntity> followers = new ArrayList<>();
 
 
