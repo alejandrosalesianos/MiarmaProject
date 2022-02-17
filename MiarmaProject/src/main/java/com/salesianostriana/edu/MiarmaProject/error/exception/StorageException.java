@@ -1,4 +1,4 @@
-package com.salesianostriana.edu.MiarmaProject.exception;
+package com.salesianostriana.edu.MiarmaProject.error.exception;
 
 import java.io.IOException;
 

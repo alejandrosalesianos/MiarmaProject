@@ -1,13 +1,10 @@
 package com.salesianostriana.edu.MiarmaProject.users.services;
 
-import com.salesianostriana.edu.MiarmaProject.exception.ListNotFoundException;
+import com.salesianostriana.edu.MiarmaProject.error.exception.ListNotFoundException;
 import com.salesianostriana.edu.MiarmaProject.services.StorageService;
 import com.salesianostriana.edu.MiarmaProject.services.base.BaseService;
-import com.salesianostriana.edu.MiarmaProject.users.dto.CreateUserDto;
-import com.salesianostriana.edu.MiarmaProject.users.dto.GetUserDto;
-import com.salesianostriana.edu.MiarmaProject.users.dto.UserDtoConverter;
+import com.salesianostriana.edu.MiarmaProject.users.dto.*;
 import com.salesianostriana.edu.MiarmaProject.users.model.UserEntity;
-import com.salesianostriana.edu.MiarmaProject.users.model.UserProfile;
 import com.salesianostriana.edu.MiarmaProject.users.repository.UserEntityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,6 +33,7 @@ public class UserEntityService extends BaseService<UserEntity, UUID, UserEntityR
 
     private final PasswordEncoder passwordEncoder;
     private final StorageService storageService;
+    private final UserDtoConverter2 userDtoConverter2;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -127,12 +125,13 @@ public class UserEntityService extends BaseService<UserEntity, UUID, UserEntityR
             return null;
         }
     }
-    /*public List<GetUserDto> ListGetUserDto(){
-        List<UserEntity> users = repository.findAllFollowers();
+    public List<GetUserWithoutLists> ListGetUserDto(UserEntity user){
+        List<UserEntity> users = repository.findAllFollowers(user.getId());
+
         if (users.isEmpty()){
             return Collections.EMPTY_LIST;
         }else {
-            return users.stream().map(userDtoConverter::UserEntityToGetUserDto).collect(Collectors.toList());
+            return users.get(0).getFollowers().stream().map(userDtoConverter2::userEntityToGetUserWithoutLists).collect(Collectors.toList());
         }
-    }*/
+    }
 }

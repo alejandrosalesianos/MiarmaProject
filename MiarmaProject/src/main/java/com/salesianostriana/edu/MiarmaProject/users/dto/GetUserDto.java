@@ -23,14 +23,6 @@ public class GetUserDto {
     private String perfil;
     private List<GetPostDto> posts;
     private List<GetFollowDto> listaPeticiones;
-    private List<GetUserDto> followers;
+    private List<GetUserWithoutLists> followers;
 
-    public GetUserDto(UUID id, String username, String email, String telefono, String avatar, String perfil) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.telefono = telefono;
-        this.avatar = avatar;
-        this.perfil = perfil;
-    }
 }

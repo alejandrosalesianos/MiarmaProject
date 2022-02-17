@@ -1,5 +1,6 @@
 package com.salesianostriana.edu.MiarmaProject.users.controller;
 
+import com.salesianostriana.edu.MiarmaProject.error.exception.ListNotFoundException;
 import com.salesianostriana.edu.MiarmaProject.users.dto.CreateUserDto;
 import com.salesianostriana.edu.MiarmaProject.users.dto.GetUserDto;
 import com.salesianostriana.edu.MiarmaProject.users.dto.UserDtoConverter;
@@ -23,7 +24,7 @@ public class UserController {
     private final UserDtoConverter dtoConverter;
 
     @PostMapping("/")
-    public ResponseEntity<?> nuevoUser(@RequestPart("user") CreateUserDto userDto, @RequestPart("file")MultipartFile file) throws Exception {
+    public ResponseEntity<?> nuevoUser(@RequestPart("user") CreateUserDto userDto, @RequestPart("file")MultipartFile file) throws Exception, ListNotFoundException {
         UserEntity user = userEntityService.saveUser(userDto,file);
         GetUserDto getUserDto = dtoConverter.UserEntityToGetUserDto(user);
         return ResponseEntity.created(URI.create(user.getFotoPerfil())).body(getUserDto);

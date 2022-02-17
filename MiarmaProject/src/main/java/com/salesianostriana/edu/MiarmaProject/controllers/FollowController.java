@@ -34,5 +34,10 @@ public class FollowController {
         followService.acceptPeticionFollow(id,user);
         return ResponseEntity.ok().build();
     }
+    @PostMapping("/decline/{id}")
+    public ResponseEntity<?> declineFollow(@PathVariable Long id){
+        followService.declinePeticionFollow(id);
+        return ResponseEntity.ok().build();
+    }
 
 }

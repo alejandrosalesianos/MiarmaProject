@@ -1,5 +1,6 @@
 package com.salesianostriana.edu.MiarmaProject.security;
 
+import com.salesianostriana.edu.MiarmaProject.error.exception.ListNotFoundException;
 import com.salesianostriana.edu.MiarmaProject.model.dto.post.GetPostDto;
 import com.salesianostriana.edu.MiarmaProject.security.dto.LoginDto;
 import com.salesianostriana.edu.MiarmaProject.security.dto.UsuarioResponseJwt;
@@ -69,7 +70,7 @@ public class AutheticationController {
                 .build();
     }
     @GetMapping("/me")
-    public ResponseEntity<?> myProfile(@AuthenticationPrincipal UserEntity user) throws Exception {
+    public ResponseEntity<?> myProfile(@AuthenticationPrincipal UserEntity user) throws Exception, ListNotFoundException {
         return ResponseEntity.ok(userDtoConverter.UserEntityToGetUserDto(user));
     }
 }

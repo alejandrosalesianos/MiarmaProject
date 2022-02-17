@@ -1,6 +1,6 @@
 package com.salesianostriana.edu.MiarmaProject.services.impl;
 
-import com.salesianostriana.edu.MiarmaProject.exception.ListNotFoundException;
+import com.salesianostriana.edu.MiarmaProject.error.exception.ListNotFoundException;
 import com.salesianostriana.edu.MiarmaProject.model.Post;
 import com.salesianostriana.edu.MiarmaProject.model.PostType;
 import com.salesianostriana.edu.MiarmaProject.model.dto.post.GetPostDto;
@@ -113,31 +113,16 @@ public class PostService extends BaseService<Post,Long, PostRepository> {
 
 
 
-    public List<GetPostDto> PostListToGetPostDtoList(){
-        List<Post> posts = repository.findAll();
+    public List<GetPostDto> PostListToGetPostDtoList() throws ListNotFoundException {
         List<Post> postsPublicos = repository.findByTipoPublicacion(PostType.PUBLICA);
-        if (posts.isEmpty() && postsPublicos.isEmpty()){
-            return Collections.EMPTY_LIST;
-        }else {
             return postsPublicos.stream().map(postDtoConverter::postToGetPostDto).collect(Collectors.toList());
-        }
     }
-    public List<GetPostDto> PostListToGetPostDtoListUsers(String user){
-        List<Post> posts = repository.findAll();
+    public List<GetPostDto> PostListToGetPostDtoListUsers(String user) throws ListNotFoundException {
         List<Post> postsUsers = repository.findAllByUserNombreUsuario(user);
-        if (posts.isEmpty() && postsUsers.isEmpty()){
-            return Collections.EMPTY_LIST;
-        }else {
             return postsUsers.stream().map(postDtoConverter::postToGetPostDto).collect(Collectors.toList());
-        }
     }
     public List<GetPostDto> PostListEntityGraph(UserEntity user){
-        List<Post> posts = repository.findAll();
         List<Post> postList = repository.findByUserId(user.getId());
-        if (posts.isEmpty() && postList.isEmpty()){
-            return Collections.EMPTY_LIST;
-        }else {
             return postList.stream().map(postDtoConverter::postToGetPostDto).collect(Collectors.toList());
-        }
     }
 }

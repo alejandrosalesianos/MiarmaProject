@@ -1,15 +1,17 @@
 package com.salesianostriana.edu.MiarmaProject.controllers;
 
-import com.salesianostriana.edu.MiarmaProject.exception.ListNotFoundException;
+import com.salesianostriana.edu.MiarmaProject.error.exception.ListNotFoundException;
+import com.salesianostriana.edu.MiarmaProject.error.exception.NotFollowingException;
 import com.salesianostriana.edu.MiarmaProject.model.Post;
+import com.salesianostriana.edu.MiarmaProject.model.PostType;
 import com.salesianostriana.edu.MiarmaProject.model.dto.post.CreatePostDto;
 import com.salesianostriana.edu.MiarmaProject.model.dto.post.GetPostDto;
 import com.salesianostriana.edu.MiarmaProject.model.dto.post.PostDtoConverter;
-import com.salesianostriana.edu.MiarmaProject.repositories.PostRepository;
 import com.salesianostriana.edu.MiarmaProject.services.StorageService;
 import com.salesianostriana.edu.MiarmaProject.services.impl.PostService;
-import com.salesianostriana.edu.MiarmaProject.users.dto.UserDtoConverter;
 import com.salesianostriana.edu.MiarmaProject.users.model.UserEntity;
+import com.salesianostriana.edu.MiarmaProject.users.model.UserProfile;
+import com.salesianostriana.edu.MiarmaProject.users.repository.UserEntityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,9 +30,8 @@ public class PostController {
 
     private final PostService postService;
     private final StorageService storageService;
-    private final UserDtoConverter userDtoConverter;
     private final PostDtoConverter postDtoConverter;
-    private final PostRepository postRepository;
+    private final UserEntityRepository userEntityRepository;
 
     @PostMapping("/")
     public ResponseEntity<GetPostDto> createPost(@RequestPart("post")CreatePostDto createPostDto, @RequestPart("file")MultipartFile file, @AuthenticationPrincipal UserEntity user) throws IOException {
@@ -54,16 +55,21 @@ public class PostController {
             return ResponseEntity.notFound().build();
         }else{
             storageService.deleteFile(post.get().getContenidoMultimedia());
+            storageService.deleteFile(post.get().getContenidoOriginal());
             postService.deleteById(id);
             return ResponseEntity.noContent().build();
         }
     }
     @GetMapping("/{id}")
-    public ResponseEntity<GetPostDto> findOnePost (@PathVariable Long id){
+    public ResponseEntity<GetPostDto> findOnePost (@PathVariable Long id,@AuthenticationPrincipal UserEntity user) throws NotFollowingException {
         Optional<Post> post = postService.findById(id);
         if (!post.isPresent()){
             return ResponseEntity.notFound().build();
-        }else {
+        }
+        if (post.get().getTipoPublicacion() == PostType.PRIVADA && !post.get().getUser().getFollowers().contains(user)){
+            throw new NotFollowingException("No sigues al usuario "+post.get().getUser().getNombreUsuario());
+        }
+        else {
             return ResponseEntity.ok().body(postDtoConverter.postToGetPostDto(post.get()));
         }
     }
@@ -74,11 +80,21 @@ public class PostController {
         return ResponseEntity.ok().body(postService.PostListToGetPostDtoList());
     }
     @GetMapping("/")
-    public ResponseEntity<List<GetPostDto>> listAllPostsByNick(@RequestParam(value = "nick") String nick){
-        return ResponseEntity.ok().body(postService.PostListToGetPostDtoListUsers(nick));
+    public ResponseEntity<List<GetPostDto>> listAllPostsByNick(@RequestParam(value = "nick") String nick, @AuthenticationPrincipal UserEntity user) throws NotFollowingException, ListNotFoundException {
+        Optional<UserEntity> user1 = userEntityRepository.findByNombreUsuario(nick);
+        if (!user1.isPresent()){
+            return ResponseEntity.notFound().build();
+        }if (user1.get().getPerfil() == UserProfile.PRIVADO &&
+                userEntityRepository.findAllFollowers(user1.get().getId()).get(0).getFollowers().contains(user)){
+            throw new NotFollowingException("No sigues a este usuario");
+        }
+        else{
+            return ResponseEntity.ok().body(postService.PostListToGetPostDtoListUsers(nick));
+        }
     }
     @GetMapping("/me")
-    public ResponseEntity<List<GetPostDto>> listAllMyPosts(@AuthenticationPrincipal UserEntity user){
+    public ResponseEntity<List<GetPostDto>> listAllMyPosts(@AuthenticationPrincipal UserEntity user) throws ListNotFoundException {
+
         return ResponseEntity.ok().body(postService.PostListToGetPostDtoListUsers(user.getUsername()));
     }
 

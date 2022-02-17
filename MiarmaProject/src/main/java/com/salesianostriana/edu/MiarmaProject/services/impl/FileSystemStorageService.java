@@ -1,22 +1,19 @@
 package com.salesianostriana.edu.MiarmaProject.services.impl;
 
 import com.salesianostriana.edu.MiarmaProject.config.StorageProperties;
-import com.salesianostriana.edu.MiarmaProject.exception.StorageException;
+import com.salesianostriana.edu.MiarmaProject.error.exception.StorageException;
 import com.salesianostriana.edu.MiarmaProject.services.StorageService;
 import com.salesianostriana.edu.MiarmaProject.utils.MediaTypeUrlResource;
 import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;

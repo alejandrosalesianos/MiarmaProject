@@ -1,5 +1,6 @@
 package com.salesianostriana.edu.MiarmaProject.services.impl;
 
+import com.salesianostriana.edu.MiarmaProject.error.exception.ListNotFoundException;
 import com.salesianostriana.edu.MiarmaProject.model.PeticionFollow;
 import com.salesianostriana.edu.MiarmaProject.model.dto.follow.CreateFollowDto;
 import com.salesianostriana.edu.MiarmaProject.model.dto.follow.FollowDtoConverter;
@@ -31,13 +32,8 @@ public class FollowService extends BaseService<PeticionFollow,Long, FollowReposi
                 .build());
     }
     public List<GetFollowDto> findUserById(UUID uuid){
-        List<PeticionFollow> lista = repository.findAll();
         List<PeticionFollow> listaPeticiones = repository.findByEmisorId(uuid);
-        if (lista.isEmpty() && listaPeticiones.isEmpty()){
-            return Collections.EMPTY_LIST;
-        }else {
             return listaPeticiones.stream().map(followDtoConverter::FollowToGetFollowDto).collect(Collectors.toList());
-        }
     }
 
     public void acceptPeticionFollow(Long id, UserEntity user){
@@ -50,7 +46,8 @@ public class FollowService extends BaseService<PeticionFollow,Long, FollowReposi
 
 
     }
-    public void declinePeticionFollow(Long id,UserEntity user){
 
+    public void declinePeticionFollow(Long id){
+        deleteById(id);
     }
 }

@@ -1,6 +1,6 @@
 package com.salesianostriana.edu.MiarmaProject.controllers;
 
-import com.salesianostriana.edu.MiarmaProject.exception.ListNotFoundException;
+import com.salesianostriana.edu.MiarmaProject.error.exception.ListNotFoundException;
 import com.salesianostriana.edu.MiarmaProject.users.dto.CreateUserDto;
 import com.salesianostriana.edu.MiarmaProject.users.dto.GetUserDto;
 import com.salesianostriana.edu.MiarmaProject.users.dto.UserDtoConverter;
@@ -12,7 +12,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,7 +24,7 @@ public class ProfileController {
     private final UserDtoConverter userDtoConverter;
 
     @GetMapping("/{id}")
-    public ResponseEntity<GetUserDto> findUserById(@PathVariable UUID id) throws Exception {
+    public ResponseEntity<GetUserDto> findUserById(@PathVariable UUID id) throws Exception, ListNotFoundException {
         Optional<UserEntity> user = userEntityService.findById(id);
         if (!user.isPresent()){
             return ResponseEntity.notFound().build();

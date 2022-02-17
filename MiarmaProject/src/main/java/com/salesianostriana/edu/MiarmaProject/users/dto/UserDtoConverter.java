@@ -1,5 +1,6 @@
 package com.salesianostriana.edu.MiarmaProject.users.dto;
 
+import com.salesianostriana.edu.MiarmaProject.error.exception.ListNotFoundException;
 import com.salesianostriana.edu.MiarmaProject.model.dto.post.GetPostDto;
 import com.salesianostriana.edu.MiarmaProject.model.dto.post.PostDtoConverter;
 import com.salesianostriana.edu.MiarmaProject.services.impl.FollowService;
@@ -20,10 +21,10 @@ public class UserDtoConverter {
 
     private final PostService postService;
     private final FollowService followService;
+    private final UserEntityService userEntityService;
     private final UserEntityRepository userEntityRepository;
 
-
-    public GetUserDto UserEntityToGetUserDto(UserEntity user) {
+    public GetUserDto UserEntityToGetUserDto(UserEntity user) throws ListNotFoundException {
 
         return GetUserDto.builder()
                 .id(user.getId())
@@ -34,8 +35,7 @@ public class UserDtoConverter {
                 .perfil(user.getPerfil().name())
                 .posts(postService.PostListEntityGraph(user))
                 .listaPeticiones(followService.findUserById(user.getId()))
-                //.followers(userEntityRepository.findAllFollowers(user.getId()))
-                //.followers(userEntityRepository.findAllFollowers(user.getId()).stream().map(lista -> new GetUserDto(lista.getId(), lista.getUsername(), lista.getEmail(), lista.getTelefono(), lista.getFotoPerfil(), lista.getPerfil().name())).collect(Collectors.toList()))
+                .followers(userEntityService.ListGetUserDto(user))
                 .build();
     }
 }
