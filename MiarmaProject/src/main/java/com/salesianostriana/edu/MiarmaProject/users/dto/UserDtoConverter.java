@@ -22,7 +22,6 @@ public class UserDtoConverter {
     private final PostService postService;
     private final FollowService followService;
     private final UserEntityService userEntityService;
-    private final UserEntityRepository userEntityRepository;
 
     public GetUserDto UserEntityToGetUserDto(UserEntity user) throws ListNotFoundException {
 
@@ -33,6 +32,7 @@ public class UserDtoConverter {
                 .telefono(user.getTelefono())
                 .avatar(user.getFotoPerfil())
                 .perfil(user.getPerfil().name())
+                .fecha(user.getFechaNacimiento())
                 .posts(postService.PostListEntityGraph(user))
                 .listaPeticiones(followService.findUserById(user.getId()))
                 .followers(userEntityService.ListGetUserDto(user))

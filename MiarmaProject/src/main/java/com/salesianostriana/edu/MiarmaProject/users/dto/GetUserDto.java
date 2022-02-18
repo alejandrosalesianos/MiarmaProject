@@ -6,6 +6,7 @@ import com.salesianostriana.edu.MiarmaProject.model.dto.post.GetPostDto;
 import com.salesianostriana.edu.MiarmaProject.users.model.UserEntity;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,6 +22,7 @@ public class GetUserDto {
     private String telefono;
     private String avatar;
     private String perfil;
+    private LocalDate fecha;
     private List<GetPostDto> posts;
     private List<GetFollowDto> listaPeticiones;
     private List<GetUserWithoutLists> followers;
