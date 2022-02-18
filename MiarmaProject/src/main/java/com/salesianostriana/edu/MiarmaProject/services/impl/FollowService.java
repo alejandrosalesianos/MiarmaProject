@@ -1,6 +1,7 @@
 package com.salesianostriana.edu.MiarmaProject.services.impl;
 
 import com.salesianostriana.edu.MiarmaProject.error.exception.ListNotFoundException;
+import com.salesianostriana.edu.MiarmaProject.error.exception.NotFollowingException;
 import com.salesianostriana.edu.MiarmaProject.model.PeticionFollow;
 import com.salesianostriana.edu.MiarmaProject.model.dto.follow.CreateFollowDto;
 import com.salesianostriana.edu.MiarmaProject.model.dto.follow.FollowDtoConverter;
@@ -24,12 +25,17 @@ public class FollowService extends BaseService<PeticionFollow,Long, FollowReposi
     private final UserEntityService userEntityService;
     private final UserEntityRepository userEntityRepository;
 
-    public PeticionFollow save(CreateFollowDto dto,UserEntity userEmisor, UserEntity userDestinatario){
-        return repository.save(PeticionFollow.builder()
-                .mensaje(dto.getMensaje())
-                .emisor(userEmisor)
-                .destinatario(userDestinatario)
-                .build());
+    public PeticionFollow save(CreateFollowDto dto,UserEntity userEmisor, UserEntity userDestinatario) throws NotFollowingException {
+        if (userEmisor == userDestinatario){
+            throw new NotFollowingException("No puedes seguirte a ti mismo");
+        }else {
+            return repository.save(PeticionFollow.builder()
+                    .mensaje(dto.getMensaje())
+                    .emisor(userEmisor)
+                    .destinatario(userDestinatario)
+                    .build());
+        }
+
     }
     public List<GetFollowDto> findUserById(UUID uuid){
         List<PeticionFollow> listaPeticiones = repository.findByEmisorId(uuid);

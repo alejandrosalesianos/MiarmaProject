@@ -40,23 +40,23 @@ public class GlobalRestControllerAdvice extends ResponseEntityExceptionHandler {
     public ResponseEntity<ApiError> handleStorageException (StorageException ex, WebRequest request){
         ApiError apiError = ApiError.builder()
                 .mensaje(ex.getLocalizedMessage())
-                .codigo(HttpStatus.NOT_FOUND.value())
-                .status(HttpStatus.NOT_FOUND)
+                .codigo(HttpStatus.BAD_REQUEST.value())
+                .status(HttpStatus.BAD_REQUEST)
                 .fecha(LocalDateTime.now())
                 .ruta(((ServletWebRequest) request).getRequest().getRequestURI())
                 .build();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
     }
     @ExceptionHandler({NotFollowingException.class})
     public ResponseEntity<ApiError> handleEntityNotFound (NotFollowingException ex, WebRequest request){
         ApiError apiError = ApiError.builder()
                 .mensaje(ex.getLocalizedMessage())
-                .codigo(HttpStatus.NOT_FOUND.value())
-                .status(HttpStatus.NOT_FOUND)
+                .codigo(HttpStatus.BAD_REQUEST.value())
+                .status(HttpStatus.BAD_REQUEST)
                 .fecha(LocalDateTime.now())
                 .ruta(((ServletWebRequest) request).getRequest().getRequestURI())
                 .build();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
     }
 
     @Override
