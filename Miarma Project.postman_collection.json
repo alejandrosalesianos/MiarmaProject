@@ -1,0 +1,560 @@
+{
+	"info": {
+		"_postman_id": "c2cb1319-281f-4c87-ae64-5dd2f26e2b5d",
+		"name": "Miarma Project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Post",
+			"item": [
+				{
+					"name": "Post Create Post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "post",
+									"type": "file",
+									"src": "/C:/Users/martin.cuale21/Desktop/MiarmaProject/MiarmaProject/json/post.json"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/martin.cuale21/Desktop/MiarmaProject/MiarmaProject/images/prayge-pray.gif"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/post/",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"post",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT edit Post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/martin.cuale21/Desktop/MiarmaProject/MiarmaProject/images/robot.png"
+								},
+								{
+									"key": "post",
+									"type": "file",
+									"src": "/C:/Users/martin.cuale21/Desktop/MiarmaProject/MiarmaProject/json/PostEdit.json"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/post/1",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"post",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET public posts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_BASE_URL}}/post/public",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"post",
+								"public"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjOTFhOTc2ZC03OGM3LTQ0MzAtOWFmZi0xNjRhZDI4MDQ5OTYiLCJpYXQiOjE2NDQ5OTczNDUsIm5vbWJyZSI6InNreWFkb3IiLCJwZXJmaWwiOiJQVUJMSUNPIn0.BGghLrE28RqtYcaRKG-B-WmLuRYX0uwShvkaiLDKz4bAcMOhcS7TNLK0bcPS8ByDxaTgnoJuh83skYgXCOnjog",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{API_BASE_URL}}/post/1",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"post",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET user Post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_BASE_URL}}/post/?nick=skyador",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"post",
+								""
+							],
+							"query": [
+								{
+									"key": "nick",
+									"value": "skyador"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET My posts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_BASE_URL}}/post/me",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"post",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Post by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_BASE_URL}}/post/1",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"post",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Post nuevoUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/martin.cuale21/Desktop/MiarmaProject/MiarmaProject/images/ProfilePic.jpg"
+								},
+								{
+									"key": "user",
+									"type": "file",
+									"src": "/C:/Users/martin.cuale21/Desktop/MiarmaProject/MiarmaProject/json/Usuario.json"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/auth/register/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"register",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post Login",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"token\", jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"skyador3@gmail.com\",\r\n    \"password\":\"hola123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Me",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/me",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Profile",
+			"item": [
+				{
+					"name": "GET Profile by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_BASE_URL}}/profile/e308e03f-f46f-4ba0-a514-4d66b16a26dd",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"profile",
+								"e308e03f-f46f-4ba0-a514-4d66b16a26dd"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Edit Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/martin.cuale21/Desktop/MiarmaProject/MiarmaProject/images/ProfilePic.jpg"
+								},
+								{
+									"key": "user",
+									"type": "file",
+									"src": "/C:/Users/martin.cuale21/Desktop/MiarmaProject/MiarmaProject/json/Usuario.json"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/profile/me",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"profile",
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Follow",
+			"item": [
+				{
+					"name": "POST Post Follow request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"mensaje\":\"Illo quiero seguirte\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_BASE_URL}}/follow/skyador",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"follow",
+								"skyador"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Accept follow",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{API_BASE_URL}}/follow/accept/1",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"follow",
+								"accept",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Decline follow",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{API_BASE_URL}}/follow/decline/1",
+							"host": [
+								"{{API_BASE_URL}}"
+							],
+							"path": [
+								"follow",
+								"decline",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}
