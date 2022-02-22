@@ -10,6 +10,9 @@ import com.salesianostriana.edu.MiarmaProject.services.StorageService;
 import com.salesianostriana.edu.MiarmaProject.services.base.BaseService;
 import com.salesianostriana.edu.MiarmaProject.users.model.UserEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -113,9 +116,9 @@ public class PostService extends BaseService<Post,Long, PostRepository> {
 
 
 
-    public List<GetPostDto> PostListToGetPostDtoList() throws ListNotFoundException {
-        List<Post> postsPublicos = repository.findByTipoPublicacion(PostType.PUBLICA);
-            return postsPublicos.stream().map(postDtoConverter::postToGetPostDto).collect(Collectors.toList());
+    public Page<GetPostDto> PostListToGetPostDtoList(Pageable pageable) throws ListNotFoundException {
+        Page<Post> postsPublicos = repository.findByTipoPublicacion(PostType.PUBLICA,pageable);
+            return new PageImpl<>(postsPublicos.stream().map(postDtoConverter::postToGetPostDto).collect(Collectors.toList()));
     }
     public List<GetPostDto> PostListToGetPostDtoListUsers(String user) throws ListNotFoundException {
         List<Post> postsUsers = repository.findAllByUserNombreUsuario(user);

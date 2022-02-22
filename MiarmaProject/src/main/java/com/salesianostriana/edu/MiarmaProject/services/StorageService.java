@@ -14,13 +14,13 @@ public interface StorageService {
 
     void init();
 
-    String store(MultipartFile file) throws IOException;
+    String store(MultipartFile file);
 
     Stream<Path> loadAll();
 
     Path load(String filename);
 
-    Resource loadAsResource(String filename) throws FileNotFoundException;
+    Resource loadAsResource(String filename);
 
     void deleteFile(String filename);
 

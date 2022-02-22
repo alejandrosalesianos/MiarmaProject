@@ -26,10 +26,6 @@ public class FileSystemStorageService implements StorageService {
 
     private final Path rootLocation;
 
-    public static BufferedImage imageResizer(BufferedImage bufferedImage,int anchoDeseado){
-        return Scalr.resize(bufferedImage,anchoDeseado);
-    }
-
     @Autowired
     public FileSystemStorageService(StorageProperties properties) {
         this.rootLocation = Paths.get(properties.getLocation());
@@ -100,7 +96,7 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public Resource loadAsResource(String filename) throws FileNotFoundException {
+    public Resource loadAsResource(String filename){
         try {
             Path file = load(filename);
             MediaTypeUrlResource resource = new MediaTypeUrlResource(file.toUri());
@@ -110,9 +106,14 @@ public class FileSystemStorageService implements StorageService {
             else {
                 throw new FileNotFoundException("No se pudo leer el archivo: " +filename);
             }
-        } catch (MalformedURLException ex){
-            throw new FileNotFoundException("No se pudo leer el archivo: " +filename);
+        } catch (MalformedURLException | FileNotFoundException ex){
+            try {
+                throw new FileNotFoundException("No se pudo leer el archivo: " +filename);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
+        return null;
     }
 
     @Override

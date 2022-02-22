@@ -12,12 +12,18 @@ import com.salesianostriana.edu.MiarmaProject.services.impl.PostService;
 import com.salesianostriana.edu.MiarmaProject.users.model.UserEntity;
 import com.salesianostriana.edu.MiarmaProject.users.model.UserProfile;
 import com.salesianostriana.edu.MiarmaProject.users.repository.UserEntityRepository;
+import com.salesianostriana.edu.MiarmaProject.utils.PaginationLinksUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
@@ -32,6 +38,7 @@ public class PostController {
     private final StorageService storageService;
     private final PostDtoConverter postDtoConverter;
     private final UserEntityRepository userEntityRepository;
+    private final PaginationLinksUtil paginationLinksUtil;
 
     @PostMapping("/")
     public ResponseEntity<GetPostDto> createPost(@RequestPart("post")CreatePostDto createPostDto, @RequestPart("file")MultipartFile file, @AuthenticationPrincipal UserEntity user) throws IOException {
@@ -76,8 +83,10 @@ public class PostController {
 
 
     @GetMapping("/public")
-    public ResponseEntity<List<GetPostDto>> listAllPublic() throws ListNotFoundException {
-        return ResponseEntity.ok().body(postService.PostListToGetPostDtoList());
+    public ResponseEntity<Page<GetPostDto>> listAllPublic(@PageableDefault() Pageable pageable, HttpServletRequest request) throws ListNotFoundException {
+        Page<GetPostDto> listPosts = postService.PostListToGetPostDtoList(pageable);
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(request.getRequestURL().toString());
+        return ResponseEntity.ok().header("link",paginationLinksUtil.createLinkHeader(listPosts,uriBuilder)).body(listPosts);
     }
     @GetMapping("/")
     public ResponseEntity<List<GetPostDto>> listAllPostsByNick(@RequestParam(value = "nick") String nick, @AuthenticationPrincipal UserEntity user) throws NotFollowingException, ListNotFoundException {
