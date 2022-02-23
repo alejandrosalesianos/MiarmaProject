@@ -83,7 +83,7 @@ public class PostController {
 
 
     @GetMapping("/public")
-    public ResponseEntity<Page<GetPostDto>> listAllPublic(@PageableDefault() Pageable pageable, HttpServletRequest request) throws ListNotFoundException {
+    public ResponseEntity<Page<GetPostDto>> listAllPublic(@PageableDefault(size = 100) Pageable pageable, HttpServletRequest request) throws ListNotFoundException {
         Page<GetPostDto> listPosts = postService.PostListToGetPostDtoList(pageable);
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(request.getRequestURL().toString());
         return ResponseEntity.ok().header("link",paginationLinksUtil.createLinkHeader(listPosts,uriBuilder)).body(listPosts);

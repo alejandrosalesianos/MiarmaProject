@@ -19,5 +19,6 @@ public class GetPostDto {
     private String contenidoMultimedia;
     private String tipoPublicacion;
     private String user;
+    private String avatarUser;
 
 }

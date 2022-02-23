@@ -26,6 +26,7 @@ public class PostDtoConverter {
                 .tipoPublicacion(post.getTipoPublicacion().name())
                 .titulo(post.getTitulo())
                 .user(post.getUser().getUsername())
+                .avatarUser(post.getUser().getFotoPerfil())
                 .build();
     }
     public GetPostDto postToGetPostDtoWithUser(Post post,UserEntity user) {
@@ -37,6 +38,7 @@ public class PostDtoConverter {
                 .tipoPublicacion(post.getTipoPublicacion().name())
                 .titulo(post.getTitulo())
                 .user(user.getUsername())
+                .avatarUser(user.getFotoPerfil())
                 .build();
     }
     public Post createPostDtoToPost(CreatePostDto createPostDto, MultipartFile file) throws IOException {
