@@ -41,8 +41,13 @@ public class PostController {
     private final PaginationLinksUtil paginationLinksUtil;
 
     @PostMapping("/")
-    public ResponseEntity<GetPostDto> createPost(@RequestPart("post")CreatePostDto createPostDto, @RequestPart("file")MultipartFile file, @AuthenticationPrincipal UserEntity user) throws IOException {
+    public ResponseEntity<GetPostDto> createPost(@RequestParam("titulo")String titulo,@RequestParam("tipoPubli")PostType tipoPublicacion,@RequestParam("contenido")String contenido, @RequestPart("file")MultipartFile file, @AuthenticationPrincipal UserEntity user) throws IOException {
 
+        CreatePostDto createPostDto = CreatePostDto.builder()
+                .titulo(titulo)
+                .contenido(contenido)
+                .tipoPublicacion(tipoPublicacion)
+                .build();
     Post post = postService.save(postDtoConverter.createPostDtoToPost(createPostDto, file),file,user);
     GetPostDto getPostDto = postDtoConverter.postToGetPostDtoWithUser(post,user);
     return ResponseEntity.created(URI.create(post.getContenidoMultimedia())).body(getPostDto);
